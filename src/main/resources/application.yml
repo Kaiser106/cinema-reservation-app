@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: cinema-reservation-app
+  datasource:
+    url: jdbc:postgresql://localhost:${POSTGRES_PORT:5432}/${POSTGRES_DB:cinema}
+    username: ${POSTGRES_USER:cinema}
+    password: ${POSTGRES_PASSWORD:cinema}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  data:
+    mongodb:
+      uri: mongodb://localhost:${MONGODB_PORT:27017}/${MONGODB_DATABASE:cinema_logs}
+
+server:
+  port: 8080
+
+integration:
+  iyzico:
+    api-key: ${IYZICO_API_KEY:}
+    secret-key: ${IYZICO_SECRET_KEY:}
+    base-url: ${IYZICO_BASE_URL:https://sandbox-api.iyzipay.com}
+  twilio:
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    phone-number: ${TWILIO_PHONE_NUMBER:}
+
+app:
+  outbox:
+    fixed-delay-ms: 5000
+  reservation-expire:
+    fixed-delay-ms: 30000

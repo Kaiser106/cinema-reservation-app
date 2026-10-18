@@ -2,8 +2,8 @@ package com.cinema.infrastructure.outbox;
 
 import com.cinema.application.port.SmsPort;
 import com.cinema.infrastructure.persistence.postgres.entity.OutboxEventEntity;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +21,7 @@ public class OutboxEventProcessor {
             JsonNode payload = objectMapper.readTree(event.getPayload());
             if ("ReservationConfirmedEvent".equals(event.getEventType())) {
                 // In real flow, phone number resolves via customer profile lookup.
-                smsPort.send("+900000000000", "Rezervasyonunuz onaylandi: " + payload.get("reservationId").asText());
+                smsPort.send("+900000000000", "Rezervasyonunuz onaylandi: " + payload.get("reservationId").asString());
             }
         } catch (Exception ex) {
             throw new IllegalStateException("outbox.process.error", ex);

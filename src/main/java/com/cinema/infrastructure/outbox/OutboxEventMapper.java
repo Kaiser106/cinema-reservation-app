@@ -2,8 +2,8 @@ package com.cinema.infrastructure.outbox;
 
 import com.cinema.domain.common.DomainEvent;
 import com.cinema.infrastructure.persistence.postgres.entity.OutboxEventEntity;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -23,7 +23,7 @@ public class OutboxEventMapper {
         e.setEventType(event.eventType());
         try {
             e.setPayload(objectMapper.writeValueAsString(event));
-        } catch (JsonProcessingException ex) {
+        } catch (JacksonException ex) {
             throw new IllegalStateException(ex);
         }
         e.setStatus("PENDING");

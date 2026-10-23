@@ -35,8 +35,4 @@ Thumbs.db
 # Ortam değişkenleri ve gizli dosyalar
 .env
 .env.*
-<<<<<<< HEAD
 !.env.example
-=======
-!.env.example
->>>>>>> a5aa79aa475a30d23dee512454400ac61cebe5dc

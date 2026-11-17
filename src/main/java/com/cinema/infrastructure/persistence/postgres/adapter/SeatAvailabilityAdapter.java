@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.SeatAvailabilityPort;
+import com.cinema.domain.repository.SeatAvailabilityRepository;
 import com.cinema.infrastructure.persistence.postgres.repository.ReservationSeatJpaRepository;
 import com.cinema.infrastructure.persistence.postgres.repository.SeatJpaRepository;
 import com.cinema.infrastructure.persistence.postgres.repository.SessionJpaRepository;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public class SeatAvailabilityAdapter implements SeatAvailabilityPort {
+public class SeatAvailabilityAdapter implements SeatAvailabilityRepository {
     private final SessionJpaRepository sessionJpaRepository;
     private final SeatJpaRepository seatJpaRepository;
     private final ReservationSeatJpaRepository reservationSeatJpaRepository;

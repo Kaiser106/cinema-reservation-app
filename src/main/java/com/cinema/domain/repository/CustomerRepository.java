@@ -1,7 +1,7 @@
-package com.cinema.application.port;
+package com.cinema.domain.repository;
 
 import com.cinema.domain.customer.Customer;
 
-public interface CustomerPort {
+public interface CustomerRepository {
     Customer save(Customer customer);
 }

@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.ReservationPort;
+import com.cinema.domain.repository.ReservationRepository;
 import com.cinema.domain.common.Money;
 import com.cinema.domain.reservation.Reservation;
 import com.cinema.domain.reservation.ReservationSeat;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class ReservationPersistenceAdapter implements ReservationPort {
+public class ReservationPersistenceAdapter implements ReservationRepository {
     private final ReservationJpaRepository repo;
 
     public ReservationPersistenceAdapter(ReservationJpaRepository repo) {

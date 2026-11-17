@@ -1,14 +1,14 @@
 package com.cinema.infrastructure.outbox;
 
-import com.cinema.application.port.OutboxPort;
-import com.cinema.domain.common.DomainEvent;
+import com.cinema.domain.repository.OutboxRepository;
+import com.cinema.domain.event.DomainEvent;
 import com.cinema.infrastructure.persistence.postgres.repository.OutboxEventJpaRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class OutboxPersistenceAdapter implements OutboxPort {
+public class OutboxPersistenceAdapter implements OutboxRepository {
     private final OutboxEventJpaRepository repo;
     private final OutboxEventMapper mapper;
 

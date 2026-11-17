@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.ProductPort;
+import com.cinema.domain.repository.ProductRepository;
 import com.cinema.domain.common.Money;
 import com.cinema.domain.product.Product;
 import com.cinema.infrastructure.persistence.postgres.entity.ProductEntity;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class ProductPersistenceAdapter implements ProductPort {
+public class ProductPersistenceAdapter implements ProductRepository {
     private final ProductJpaRepository repo;
 
     public ProductPersistenceAdapter(ProductJpaRepository repo) {

@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.UserPort;
+import com.cinema.domain.repository.UserRepository;
 import com.cinema.domain.user.User;
 import com.cinema.domain.user.UserRole;
 import com.cinema.infrastructure.persistence.postgres.entity.UserEntity;
@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class UserPersistenceAdapter implements UserPort {
+public class UserPersistenceAdapter implements UserRepository {
     private final UserJpaRepository repo;
 
     public UserPersistenceAdapter(UserJpaRepository repo) { this.repo = repo; }

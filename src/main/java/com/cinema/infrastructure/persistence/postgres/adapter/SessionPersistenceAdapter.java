@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.SessionPort;
+import com.cinema.application.port.SessionReadRepository;
 import com.cinema.application.session.dto.SessionDto;
 import com.cinema.domain.common.Money;
 import com.cinema.domain.session.Session;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class SessionPersistenceAdapter implements SessionPort {
+public class SessionPersistenceAdapter implements SessionReadRepository {
     private final SessionJpaRepository repo;
 
     public SessionPersistenceAdapter(SessionJpaRepository repo) {

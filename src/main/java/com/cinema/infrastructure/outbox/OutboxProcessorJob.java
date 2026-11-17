@@ -6,45 +6,66 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
+/**
+ * Polls the outbox table. Claiming and per-event processing run in SEPARATE transactions via
+ * TransactionTemplate (self-invoked @Transactional methods are bypassed by the Spring proxy).
+ * A claimed row gets a lease (next_attempt_at); if the instance crashes, the row is re-claimed after the lease expires.
+ */
 @Component
 public class OutboxProcessorJob {
     private static final Logger log = LoggerFactory.getLogger(OutboxProcessorJob.class);
-    private static final int MAX_ATTEMPTS = 5;
+    static final int MAX_ATTEMPTS = 5;
+    static final int BATCH_SIZE = 20;
+    static final long LEASE_SECONDS = 60;
 
     private final OutboxEventJpaRepository repo;
     private final OutboxEventProcessor processor;
+    private final TransactionTemplate tx;
 
-    public OutboxProcessorJob(OutboxEventJpaRepository repo, OutboxEventProcessor processor) {
+    public OutboxProcessorJob(OutboxEventJpaRepository repo, OutboxEventProcessor processor, PlatformTransactionManager txManager) {
         this.repo = repo;
         this.processor = processor;
+        this.tx = new TransactionTemplate(txManager);
+        this.tx.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
     }
 
     @Scheduled(fixedDelayString = "${app.outbox.fixed-delay-ms:5000}")
     public void processOutbox() {
-        List<OutboxEventEntity> batch = claimBatch(20);
-        for (OutboxEventEntity e : batch) {
-            processSingle(e);
+        List<UUID> ids = tx.execute(s -> claimBatch(BATCH_SIZE));
+        if (ids == null) return;
+        for (UUID id : ids) {
+            try {
+                tx.executeWithoutResult(s -> processSingle(id));
+            } catch (Exception ex) {
+                log.error("Outbox event could not be finalized eventId={}", id, ex);
+            }
         }
     }
 
-    @Transactional
-    public List<OutboxEventEntity> claimBatch(int limit) {
+    List<UUID> claimBatch(int limit) {
         List<OutboxEventEntity> rows = repo.claimBatch(limit);
-        rows.forEach(r -> r.setStatus("PROCESSING"));
-        return repo.saveAll(rows);
+        Instant leaseUntil = Instant.now().plusSeconds(LEASE_SECONDS);
+        rows.forEach(r -> { r.setStatus("PROCESSING"); r.setNextAttemptAt(leaseUntil); });
+        repo.saveAll(rows);
+        return rows.stream().map(OutboxEventEntity::getId).toList();
     }
 
-    @Transactional
-    public void processSingle(OutboxEventEntity event) {
+    void processSingle(UUID id) {
+        OutboxEventEntity event = repo.findById(id).orElse(null);
+        if (event == null || !"PROCESSING".equals(event.getStatus())) return;
         try {
             processor.process(event);
             event.setStatus("PROCESSED");
             event.setProcessedAt(Instant.now());
+            event.setNextAttemptAt(null);
             event.setLastError(null);
         } catch (Exception ex) {
             int retries = event.getRetryCount() + 1;
@@ -52,6 +73,7 @@ public class OutboxProcessorJob {
             event.setLastError(ex.getMessage());
             if (retries >= MAX_ATTEMPTS) {
                 event.setStatus("DEAD");
+                event.setNextAttemptAt(null);
             } else {
                 event.setStatus("PENDING");
                 event.setNextAttemptAt(Instant.now().plusSeconds((long) Math.pow(2, retries)));

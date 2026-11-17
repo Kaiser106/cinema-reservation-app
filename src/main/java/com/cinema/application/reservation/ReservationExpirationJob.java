@@ -1,7 +1,7 @@
 package com.cinema.application.reservation;
 
-import com.cinema.application.port.OutboxPort;
-import com.cinema.application.port.ReservationPort;
+import com.cinema.domain.repository.OutboxRepository;
+import com.cinema.domain.repository.ReservationRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,21 +10,21 @@ import java.time.Instant;
 
 @Component
 public class ReservationExpirationJob {
-    private final ReservationPort reservationPort;
-    private final OutboxPort outboxPort;
+    private final ReservationRepository reservationRepository;
+    private final OutboxRepository outboxRepository;
 
-    public ReservationExpirationJob(ReservationPort reservationPort, OutboxPort outboxPort) {
-        this.reservationPort = reservationPort;
-        this.outboxPort = outboxPort;
+    public ReservationExpirationJob(ReservationRepository reservationRepository, OutboxRepository outboxRepository) {
+        this.reservationRepository = reservationRepository;
+        this.outboxRepository = outboxRepository;
     }
 
     @Scheduled(fixedDelayString = "${app.reservation-expire.fixed-delay-ms:30000}")
     @Transactional
     public void expirePendingReservations() {
-        reservationPort.findPendingExpired(Instant.now(), 100).forEach(r -> {
+        reservationRepository.findPendingExpired(Instant.now(), 100).forEach(r -> {
             r.cancel("expired");
-            reservationPort.save(r);
-            outboxPort.storeAll(r.pullDomainEvents());
+            reservationRepository.save(r);
+            outboxRepository.storeAll(r.pullDomainEvents());
         });
     }
 }

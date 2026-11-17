@@ -21,7 +21,9 @@ import static org.mockito.Mockito.*;
 class OutboxProcessorTest {
     @Mock OutboxEventJpaRepository repo;
     @Mock OutboxEventProcessor processor;
-    @InjectMocks OutboxProcessorJob job;
+    @Mock org.springframework.transaction.PlatformTransactionManager txManager;
+    OutboxProcessorJob job;
+    @org.junit.jupiter.api.BeforeEach void init() { job = new OutboxProcessorJob(repo, processor, txManager); }
 
     @Test
     void shouldMarkProcessed() {
@@ -35,6 +37,7 @@ class OutboxProcessorTest {
 
         when(repo.claimBatch(20)).thenReturn(List.of(e));
         when(repo.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
+        when(repo.findById(e.getId())).thenReturn(java.util.Optional.of(e));
 
         job.processOutbox();
         verify(processor, times(1)).process(any());

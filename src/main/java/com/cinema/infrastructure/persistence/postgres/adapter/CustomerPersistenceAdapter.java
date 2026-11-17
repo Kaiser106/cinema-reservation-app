@@ -1,13 +1,13 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.CustomerPort;
+import com.cinema.domain.repository.CustomerRepository;
 import com.cinema.domain.customer.Customer;
 import com.cinema.infrastructure.persistence.postgres.entity.CustomerEntity;
 import com.cinema.infrastructure.persistence.postgres.repository.CustomerJpaRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomerPersistenceAdapter implements CustomerPort {
+public class CustomerPersistenceAdapter implements CustomerRepository {
     private final CustomerJpaRepository repo;
 
     public CustomerPersistenceAdapter(CustomerJpaRepository repo) {

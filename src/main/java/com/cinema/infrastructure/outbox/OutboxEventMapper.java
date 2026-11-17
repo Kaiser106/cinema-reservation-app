@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.outbox;
 
-import com.cinema.domain.common.DomainEvent;
+import com.cinema.domain.event.DomainEvent;
 import com.cinema.infrastructure.persistence.postgres.entity.OutboxEventEntity;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;

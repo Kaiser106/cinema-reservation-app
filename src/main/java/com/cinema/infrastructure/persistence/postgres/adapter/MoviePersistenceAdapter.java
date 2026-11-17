@@ -1,7 +1,7 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
 import com.cinema.application.movie.dto.MovieDto;
-import com.cinema.application.port.MoviePort;
+import com.cinema.application.port.MovieReadRepository;
 import com.cinema.domain.movie.Movie;
 import com.cinema.infrastructure.persistence.postgres.repository.MovieJpaRepository;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class MoviePersistenceAdapter implements MoviePort {
+public class MoviePersistenceAdapter implements MovieReadRepository {
     private final MovieJpaRepository repo;
 
     public MoviePersistenceAdapter(MovieJpaRepository repo) {

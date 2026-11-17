@@ -1,6 +1,6 @@
 package com.cinema.domain.reservation.events;
 
-import com.cinema.domain.common.DomainEvent;
+import com.cinema.domain.event.DomainEvent;
 
 import java.time.Instant;
 import java.util.UUID;

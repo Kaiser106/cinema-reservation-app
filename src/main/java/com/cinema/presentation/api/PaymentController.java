@@ -3,6 +3,7 @@ package com.cinema.presentation.api;
 import com.cinema.application.payment.ProcessPaymentCommandHandler;
 import com.cinema.application.payment.commands.ProcessPaymentCommand;
 import com.cinema.infrastructure.auth.SessionPrincipal;
+import com.cinema.presentation.interceptor.IdempotencyInterceptor;
 import com.cinema.presentation.request.payment.ProcessPaymentRequest;
 import com.cinema.presentation.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,12 +25,11 @@ public class PaymentController {
 
     @PostMapping
     public ApiResponse<Map<String, UUID>> pay(@Valid @RequestBody ProcessPaymentRequest request,
-                                               @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey,
+                                               @RequestAttribute(IdempotencyInterceptor.ATTRIBUTE) String idempotencyKey,
                                                Authentication auth,
                                                HttpServletRequest req) {
         SessionPrincipal p = (SessionPrincipal) auth.getPrincipal();
-        String key = (idempotencyKey == null || idempotencyKey.isBlank()) ? UUID.randomUUID().toString() : idempotencyKey;
-        UUID paymentId = processPaymentCommandHandler.handle(new ProcessPaymentCommand(request.reservationId(), p.userId(), request.amount(), request.paymentMethod(), key));
+        UUID paymentId = processPaymentCommandHandler.handle(new ProcessPaymentCommand(request.reservationId(), p.userId(), request.amount(), request.paymentMethod(), idempotencyKey));
         return ApiResponse.ok(Map.of("paymentId", paymentId), req.getRequestURI());
     }
 }

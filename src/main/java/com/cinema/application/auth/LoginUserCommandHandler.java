@@ -5,9 +5,9 @@ import com.cinema.application.common.BusinessException;
 import com.cinema.application.common.CommandHandler;
 import com.cinema.application.common.ErrorCodes;
 import com.cinema.application.port.SessionAuthPort;
-import com.cinema.application.port.UserPort;
+import com.cinema.domain.repository.UserRepository;
 import com.cinema.domain.user.User;
-import com.cinema.infrastructure.auth.PasswordEncoderService;
+import com.cinema.application.port.PasswordHasherPort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,12 +15,12 @@ import java.time.Instant;
 
 @Component
 public class LoginUserCommandHandler implements CommandHandler<LoginUserCommand, String> {
-    private final UserPort userPort;
+    private final UserRepository userRepository;
     private final SessionAuthPort sessionAuthPort;
-    private final PasswordEncoderService passwordEncoderService;
+    private final PasswordHasherPort passwordEncoderService;
 
-    public LoginUserCommandHandler(UserPort userPort, SessionAuthPort sessionAuthPort, PasswordEncoderService passwordEncoderService) {
-        this.userPort = userPort;
+    public LoginUserCommandHandler(UserRepository userRepository, SessionAuthPort sessionAuthPort, PasswordHasherPort passwordEncoderService) {
+        this.userRepository = userRepository;
         this.sessionAuthPort = sessionAuthPort;
         this.passwordEncoderService = passwordEncoderService;
     }
@@ -28,7 +28,7 @@ public class LoginUserCommandHandler implements CommandHandler<LoginUserCommand,
     @Override
     @Transactional
     public String handle(LoginUserCommand command) {
-        User user = userPort.findByEmail(command.email())
+        User user = userRepository.findByEmail(command.email())
                 .orElseThrow(() -> new BusinessException(ErrorCodes.AUTH_INVALID_CREDENTIALS, "error.auth.invalidCredentials"));
 
         if (!passwordEncoderService.matches(command.password(), user.getPasswordHash())) {

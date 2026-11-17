@@ -2,7 +2,7 @@ package com.cinema.presentation.api;
 
 import com.cinema.application.product.PurchaseProductCommandHandler;
 import com.cinema.application.product.commands.PurchaseProductCommand;
-import com.cinema.application.port.ProductPort;
+import com.cinema.domain.repository.ProductRepository;
 import com.cinema.infrastructure.auth.SessionPrincipal;
 import com.cinema.presentation.request.product.PurchaseProductRequest;
 import com.cinema.presentation.response.ApiResponse;
@@ -16,17 +16,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
-    private final ProductPort productPort;
+    private final ProductRepository productRepository;
     private final PurchaseProductCommandHandler purchaseHandler;
 
-    public ProductController(ProductPort productPort, PurchaseProductCommandHandler purchaseHandler) {
-        this.productPort = productPort;
+    public ProductController(ProductRepository productRepository, PurchaseProductCommandHandler purchaseHandler) {
+        this.productRepository = productRepository;
         this.purchaseHandler = purchaseHandler;
     }
 
     @GetMapping
     public ApiResponse<?> list(HttpServletRequest req) {
-        return ApiResponse.ok(productPort.findAll().stream().map(p -> Map.of(
+        return ApiResponse.ok(productRepository.findAll().stream().map(p -> Map.of(
                 "id", p.getId(),
                 "name", p.getName(),
                 "price", p.getPrice().toBigDecimal(),

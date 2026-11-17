@@ -1,9 +1,9 @@
-package com.cinema.application.port;
+package com.cinema.domain.repository;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface SeatAvailabilityPort {
+public interface SeatAvailabilityRepository {
     void lockSessionAndSeats(UUID sessionId, List<Long> seatIds);
     boolean hasReservedSeat(UUID sessionId, List<Long> seatIds);
     List<Long> findAvailableSeatIds(UUID sessionId);

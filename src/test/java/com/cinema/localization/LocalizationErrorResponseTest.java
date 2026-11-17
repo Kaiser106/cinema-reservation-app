@@ -3,7 +3,7 @@ package com.cinema.localization;
 import com.cinema.application.auth.LoginUserCommandHandler;
 import com.cinema.application.auth.LogoutUserCommandHandler;
 import com.cinema.application.auth.RegisterUserCommandHandler;
-import com.cinema.application.common.LocalizedMessageService;
+import com.cinema.infrastructure.localization.LocalizationService;
 import com.cinema.application.port.SessionAuthPort;
 import com.cinema.infrastructure.config.MessageSourceConfig;
 import com.cinema.presentation.api.AuthController;
@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = AuthController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@Import({GlobalExceptionHandler.class, MessageSourceConfig.class, LocalizedMessageService.class})
+@Import({GlobalExceptionHandler.class, MessageSourceConfig.class, LocalizationService.class})
 class LocalizationErrorResponseTest {
     @Autowired MockMvc mockMvc;
 

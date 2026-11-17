@@ -1,4 +1,4 @@
-package com.cinema.domain.common;
+package com.cinema.domain.event;
 
 import java.time.Instant;
 

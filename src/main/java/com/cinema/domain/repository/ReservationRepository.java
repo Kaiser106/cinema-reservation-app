@@ -1,4 +1,4 @@
-package com.cinema.application.port;
+package com.cinema.domain.repository;
 
 import com.cinema.domain.reservation.Reservation;
 import org.springframework.data.domain.Page;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ReservationPort {
+public interface ReservationRepository {
     Reservation save(Reservation reservation);
     Optional<Reservation> findById(UUID id);
     Page<Reservation> findByUserId(UUID userId, Pageable pageable);

@@ -3,10 +3,10 @@ package com.cinema.application.auth;
 import com.cinema.application.auth.commands.LoginUserCommand;
 import com.cinema.application.common.BusinessException;
 import com.cinema.application.port.SessionAuthPort;
-import com.cinema.application.port.UserPort;
+import com.cinema.domain.repository.UserRepository;
 import com.cinema.domain.user.User;
 import com.cinema.domain.user.UserRole;
-import com.cinema.infrastructure.auth.PasswordEncoderService;
+import com.cinema.application.port.PasswordHasherPort;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,15 +22,15 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class LoginUserCommandHandlerTest {
-    @Mock UserPort userPort;
+    @Mock UserRepository userRepository;
     @Mock SessionAuthPort sessionAuthPort;
-    @Mock PasswordEncoderService passwordEncoderService;
+    @Mock PasswordHasherPort passwordEncoderService;
     @InjectMocks LoginUserCommandHandler handler;
 
     @Test
     void shouldLoginAndCreateSession() {
         User u = new User(UUID.randomUUID(), "a@a.com", "hash", UserRole.CUSTOMER, Instant.now(), true);
-        when(userPort.findByEmail("a@a.com")).thenReturn(Optional.of(u));
+        when(userRepository.findByEmail("a@a.com")).thenReturn(Optional.of(u));
         when(passwordEncoderService.matches("12345678", "hash")).thenReturn(true);
         when(sessionAuthPort.createSession(any(), any(), any(), any(), any())).thenReturn("token");
 
@@ -41,7 +41,7 @@ class LoginUserCommandHandlerTest {
     @Test
     void shouldFailForInvalidPassword() {
         User u = new User(UUID.randomUUID(), "a@a.com", "hash", UserRole.CUSTOMER, Instant.now(), true);
-        when(userPort.findByEmail("a@a.com")).thenReturn(Optional.of(u));
+        when(userRepository.findByEmail("a@a.com")).thenReturn(Optional.of(u));
         when(passwordEncoderService.matches("bad", "hash")).thenReturn(false);
 
         assertThrows(BusinessException.class, () -> handler.handle(new LoginUserCommand("a@a.com", "bad", "agent", "127.0.0.1")));

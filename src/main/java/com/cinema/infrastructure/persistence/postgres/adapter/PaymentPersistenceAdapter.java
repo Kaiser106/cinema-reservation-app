@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.persistence.postgres.adapter;
 
-import com.cinema.application.port.PaymentPort;
+import com.cinema.domain.repository.PaymentRepository;
 import com.cinema.domain.common.Money;
 import com.cinema.domain.payment.Payment;
 import com.cinema.domain.payment.PaymentStatus;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public class PaymentPersistenceAdapter implements PaymentPort {
+public class PaymentPersistenceAdapter implements PaymentRepository {
     private final PaymentJpaRepository repo;
 
     public PaymentPersistenceAdapter(PaymentJpaRepository repo) {

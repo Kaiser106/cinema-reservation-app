@@ -3,7 +3,7 @@ package com.cinema.authorization;
 import com.cinema.application.auth.LoginUserCommandHandler;
 import com.cinema.application.auth.LogoutUserCommandHandler;
 import com.cinema.application.auth.RegisterUserCommandHandler;
-import com.cinema.application.common.LocalizedMessageService;
+import com.cinema.infrastructure.localization.LocalizationService;
 import com.cinema.application.port.SessionAuthPort;
 import com.cinema.infrastructure.auth.SessionAuthenticationFilter;
 import com.cinema.infrastructure.config.SecurityConfig;
@@ -44,7 +44,7 @@ class RoleBasedAuthorizationTest {
     LogoutUserCommandHandler logoutUserCommandHandler;
 
     @MockitoBean
-    LocalizedMessageService localizedMessageService;
+    LocalizationService localizedMessageService;
 
     @Test
     void customerCannotAccessAdminOperations() throws Exception {

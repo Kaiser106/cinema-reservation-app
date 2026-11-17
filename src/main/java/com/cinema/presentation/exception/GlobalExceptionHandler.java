@@ -1,7 +1,7 @@
 package com.cinema.presentation.exception;
 
 import com.cinema.application.common.BusinessException;
-import com.cinema.application.common.LocalizedMessageService;
+import com.cinema.infrastructure.localization.LocalizationService;
 import com.cinema.presentation.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private final LocalizedMessageService messageService;
+    private final LocalizationService messageService;
 
-    public GlobalExceptionHandler(LocalizedMessageService messageService) {
+    public GlobalExceptionHandler(LocalizationService messageService) {
         this.messageService = messageService;
     }
 
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
             case "AUTH_INVALID_CREDENTIALS", "AUTH_UNAUTHORIZED" -> HttpStatus.UNAUTHORIZED;
             case "AUTH_FORBIDDEN", "RESERVATION_ACCESS_DENIED" -> HttpStatus.FORBIDDEN;
             case "RESERVATION_NOT_FOUND", "USER_NOT_FOUND", "PRODUCT_NOT_FOUND" -> HttpStatus.NOT_FOUND;
-            case "RESERVATION_SEAT_ALREADY_RESERVED" -> HttpStatus.CONFLICT;
+            case "RESERVATION_SEAT_ALREADY_RESERVED", "PAYMENT_IDEMPOTENT_REPLAY" -> HttpStatus.CONFLICT;
             default -> HttpStatus.BAD_REQUEST;
         };
         return ResponseEntity.status(status).body(ErrorResponse.of(ex.getCode(), messageService.get(ex.getMessage()), req.getRequestURI()));

@@ -1,5 +1,7 @@
 package com.cinema.domain.common;
 
+import com.cinema.domain.event.DomainEvent;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

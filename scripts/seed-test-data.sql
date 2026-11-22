@@ -22,7 +22,12 @@ from hm
          cross join lateral (values
                                  (date_trunc('day', now()) + interval '1 day 14 hours', 150.00),
                                  (date_trunc('day', now()) + interval '1 day 20 hours', 180.00)
-    ) as s(st, price);
+    ) as s(st, price)
+where not exists (
+    select 1 from sessions x
+    where x.hall_id = hm.hall_id and x.start_time = s.st
+);
+
 
 -- Ürünler (3 adet)
 insert into products (name, price, stock) values

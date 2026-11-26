@@ -1,6 +1,6 @@
 package com.cinema.domain.point.events;
 
-import com.cinema.domain.event.DomainEvent;
+import com.cinema.domain.shared.DomainEvent;
 
 import java.time.Instant;
 import java.util.UUID;

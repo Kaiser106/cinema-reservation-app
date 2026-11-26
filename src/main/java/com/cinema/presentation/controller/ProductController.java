@@ -1,0 +1,43 @@
+package com.cinema.presentation.controller;
+
+import com.cinema.application.features.product.commands.purchase.PurchaseProductCommand;
+import com.cinema.application.features.product.commands.purchase.PurchaseProductCommandHandler;
+import com.cinema.domain.product.repository.ProductRepository;
+import com.cinema.infrastructure.auth.SessionPrincipal;
+import com.cinema.presentation.dto.request.product.PurchaseProductRequest;
+import com.cinema.presentation.dto.response.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/products")
+public class ProductController {
+    private final ProductRepository productRepository;
+    private final PurchaseProductCommandHandler purchaseHandler;
+
+    public ProductController(ProductRepository productRepository, PurchaseProductCommandHandler purchaseHandler) {
+        this.productRepository = productRepository;
+        this.purchaseHandler = purchaseHandler;
+    }
+
+    @GetMapping
+    public ApiResponse<?> list(HttpServletRequest req) {
+        return ApiResponse.ok(productRepository.findAll().stream().map(p -> Map.of(
+                "id", p.getId(),
+                "name", p.getName(),
+                "price", p.getPrice().toBigDecimal(),
+                "stock", p.getStock()
+        )).toList(), req.getRequestURI());
+    }
+
+    @PostMapping("/purchase")
+    public ApiResponse<Void> purchase(@Valid @RequestBody PurchaseProductRequest request, Authentication auth, HttpServletRequest req) {
+        SessionPrincipal p = (SessionPrincipal) auth.getPrincipal();
+        purchaseHandler.handle(new PurchaseProductCommand(p.userId(), request.productId(), request.quantity()));
+        return ApiResponse.ok(null, req.getRequestURI());
+    }
+}

@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.auth;
 
-import com.cinema.application.port.SessionAuthPort;
+import com.cinema.application.features.auth.ports.SessionAuthPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

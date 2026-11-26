@@ -1,7 +1,6 @@
 package com.cinema.infrastructure.outbox;
 
-import com.cinema.domain.event.DomainEvent;
-import com.cinema.infrastructure.persistence.postgres.entity.OutboxEventEntity;
+import com.cinema.domain.shared.DomainEvent;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;

@@ -1,8 +1,7 @@
 package com.cinema.infrastructure.outbox;
 
-import com.cinema.application.port.SmsPort;
-import com.cinema.infrastructure.persistence.postgres.entity.OutboxEventEntity;
-import com.cinema.infrastructure.persistence.postgres.repository.CustomerJpaRepository;
+import com.cinema.application.shared.ports.SmsPort;
+import com.cinema.infrastructure.persistence.customer.CustomerJpaRepository;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

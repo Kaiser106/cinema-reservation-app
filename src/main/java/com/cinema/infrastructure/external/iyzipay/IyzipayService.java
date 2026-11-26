@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.external.iyzipay;
 
-import com.cinema.application.port.PaymentGatewayPort;
+import com.cinema.application.features.payment.ports.PaymentGatewayPort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

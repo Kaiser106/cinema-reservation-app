@@ -1,8 +1,8 @@
 package com.cinema.presentation.exception;
 
-import com.cinema.application.common.BusinessException;
+import com.cinema.application.shared.exception.BusinessException;
 import com.cinema.infrastructure.localization.LocalizationService;
-import com.cinema.presentation.response.ErrorResponse;
+import com.cinema.presentation.dto.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;

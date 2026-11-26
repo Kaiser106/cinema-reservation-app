@@ -1,8 +1,8 @@
 package com.cinema.infrastructure.auth;
 
-import com.cinema.application.port.SessionAuthPort;
-import com.cinema.infrastructure.persistence.postgres.entity.UserSessionEntity;
-import com.cinema.infrastructure.persistence.postgres.repository.UserSessionJpaRepository;
+import com.cinema.application.features.auth.ports.SessionAuthPort;
+import com.cinema.infrastructure.persistence.user.UserSessionEntity;
+import com.cinema.infrastructure.persistence.user.UserSessionJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;

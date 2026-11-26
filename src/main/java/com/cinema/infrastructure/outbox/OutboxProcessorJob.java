@@ -1,7 +1,5 @@
 package com.cinema.infrastructure.outbox;
 
-import com.cinema.infrastructure.persistence.postgres.entity.OutboxEventEntity;
-import com.cinema.infrastructure.persistence.postgres.repository.OutboxEventJpaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,12 +11,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-
-/**
- * Polls the outbox table. Claiming and per-event processing run in SEPARATE transactions via
- * TransactionTemplate (self-invoked @Transactional methods are bypassed by the Spring proxy).
- * A claimed row gets a lease (next_attempt_at); if the instance crashes, the row is re-claimed after the lease expires.
- */
 @Component
 public class OutboxProcessorJob {
     private static final Logger log = LoggerFactory.getLogger(OutboxProcessorJob.class);

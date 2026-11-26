@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.auth;
 
-import com.cinema.application.port.PasswordHasherPort;
+import com.cinema.application.features.auth.ports.PasswordHasherPort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

@@ -1,8 +1,7 @@
 package com.cinema.infrastructure.outbox;
 
-import com.cinema.domain.repository.OutboxRepository;
-import com.cinema.domain.event.DomainEvent;
-import com.cinema.infrastructure.persistence.postgres.repository.OutboxEventJpaRepository;
+import com.cinema.application.shared.ports.OutboxRepository;
+import com.cinema.domain.shared.DomainEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

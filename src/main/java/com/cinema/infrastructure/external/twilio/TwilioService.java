@@ -1,6 +1,6 @@
 package com.cinema.infrastructure.external.twilio;
 
-import com.cinema.application.port.SmsPort;
+import com.cinema.application.shared.ports.SmsPort;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
